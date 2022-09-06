@@ -6,8 +6,8 @@ from table.models import event
 
 @admin.register(event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start', 'end', 'get_duration' , 'location', 'notes')
-    list_filter = ('start', 'end',)
+    list_display = ('name', 'start_date', 'end_date', 'location', 'notes')
+    list_filter = ('start_date', 'end_date',)
     search_fields = ('name', 'notes',)
-    fields = ('name', 'notes', 'start', 'end','get_duration' ,  )
-    readonly_fields = ('get_duration',)
+    # fields = ('name', 'notes', 'start_date', 'end_date',  )
+    # readonly_fields = ('get_duration',)

@@ -42,10 +42,14 @@ class event(models.Model):
 
     render_type = models.IntegerField(choices=EVENT_RENDER_TYPE, null=True, blank=True)
 
-    start = models.DateTimeField()
+    start_date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+
     # the following field is calculated on save
     week = models.CharField(max_length=2, null=True, blank=True)
-    end = models.DateTimeField()
+
     # duration = models.DurationField()  # calculable
 
     location = models.CharField(max_length=100, default='none', null=True, blank=True)
@@ -70,7 +74,7 @@ class event(models.Model):
 
     class Meta:
         db_table = 'event'
-        ordering = ['start', 'render_type']
+        ordering = ['start_date', 'start_time', 'render_type']
 
     def __str__(self):
         if self.name:
@@ -84,14 +88,15 @@ class event(models.Model):
             return self.repeat_unit._value_
 
     def get_duration(self):
-        if self.end and self.start:
-            return self.end - self.start
+        if self.end_date and self.start_date:
+            if self.end_time and self.start_time:
+                return 'Duration not calculated. I don''t yet know how.'
 
     def get_week(self):
         ''' This is a class method
         It returns the week number that the self.start date is in
         '''
-        return self.start.strftime("%V")
+        return self.start_date.strftime("%V")
 
     # overide the save method, calulating week
     # so we can later groupby / orderby week when reading the events from database

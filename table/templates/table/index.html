@@ -1,3 +1,4 @@
+{% load tz %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,11 +23,9 @@
 
         table {
             width: auto;
+
         }
 
-        th {
-            min-width: 15em;
-        }
 
         td:nth-last-of-type(-n+2) {
             background: #F1F1F1;
@@ -45,88 +44,77 @@
 </head>
 <body>
 <div class="container">
-    {% for i in loop_times %}
-        <div class="row"> {{ i }} </div>
+
+
+    <div class="row container-fluid sticky-top border-1 bg-light">
+
+        <div class="col text-end text-muted border-1">
+            Mon
+        </div>
+        <div class="col text-end text-muted border-1">
+            Tue
+        </div>
+        <div class="col text-end text-muted border-1">
+            Wed
+        </div>
+        <div class="col text-end text-muted border-1">
+            Thu
+        </div>
+        <div class="col text-end text-muted border-1">
+            Fri
+        </div>
+        <div class="col text-end text-muted border-1 bg-light">
+            Sat
+        </div>
+        <div class="col text-end text-muted border-1 bg-light">
+            Sun
+        </div>
+
+    </div>
+
+    {% regroup events by week as events_by_week %}
+
+    {% for week in events_by_week %}
+        <div class="row border border-1 " style="min-height:12rem;">
+        {% regroup week.list by start_date as days_per_week %}
+        {% for date in days_per_week %}
+
+
+
+            {% if forloop.counter  > 5 %}
+                <div class="col border border-1 bg-light ">
+            {% else %}
+                <div class="col border border-1 ">
+            {% endif %}
+
+        {% for ev in date.list %}
+            <div class="row">
+                {% if ev.render_type == 10 %}
+                    <div class="row p-0 m-0 justify-content-between">
+                        {% if ev.start_date.weekday == 0 %}
+                            <div class="col">Wk:{{ ev.week }}{% comment %} {{ev.start_date|date:"M" }}{% endcomment %}</div>
+                        {% else %}
+                            <div class="col"></div>
+                        {% endif %}
+                        {% if ev.start_date.day == 1 %}
+                            <div class="col-auto text-end lead">{{ ev.start_date |  date:"d-M" }}</div>
+                        {% else %}
+                            <div class="col-auto text-end">{{ ev.start_date | date:"d" }}</div>
+                        {% endif %}
+                    </div>
+
+                {% elif ev.render_type == 30 or ev.render_type == 50 %}
+                    {{ ev.name }}
+                {% else %}  {# render type default 70 #}
+                    {{ ev.start_time| time:"H:i" }} {{ ev.name }}
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
     {% endfor %}
 
-    <table class="table table-bordered text-muted">
-
-        <colgroup>
-            <col span="1" style="width:3%;">
-        </colgroup>
-
-
-        <thead>
-        <tr>
-            <td>
-                Wk
-            </td>
-
-            <td>
-                Monday
-            </td>
-            <td>
-                Tuesday
-            </td>
-            <td>
-                Wednesday
-            </td>
-            <td>
-                Thursday
-            </td>
-            <td>
-                Friday
-            </td>
-            <td>
-                Saturday
-            </td>
-            <td>
-                Sunday
-            </td>
-
-        </tr>
-
-
-        </thead>
-        {{ month }}
-        <tbody>
-
-
-        {% regroup events by week as events_by_week %}
-        {% for week in events_by_week %}
-            <tr>
-                {% regroup week.list by start as days_per_week %}
-                <td>{{ week.grouper }}  </td>
-                {% for date in days_per_week %}
-                    <td>
-
-                                {% for ev in date.list %}
-                                     <div class="row p-0 m-0 border-0" style="min-width:12rem;min-height:6rem;">
-                                    <div>
-                                         {% if ev.render_type == 10 %}
-                                     <div class="card-title p-0 m-0 text-end text-muted">{{ ev.start|date:"d" }}</div>
-                                    {% else %}
-                                        <div class="card-text p-0 m-0" >{{ ev.start|date:"H:m" }}:{{ ev.name }}</div>
-                                    {% endif %}
-                                    </div>
-                                     </div>
-                                {% endfor %}
-                        </div>
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-
-
-
-
-
-        {#            {% for e in events %}#}
-        {#                    <td>{{e.week}}<br />{{ e.start }} - {{ e.name }}</td>#}
-        {#                {% endfor %}#}
-
-        </tbody>
-    </table>
-</div>
+    </div>
 </body>
 </html>
