@@ -14,4 +14,4 @@ Drag and drop on to an event any of people, resource or address to add that to t
 
 Partial build. Archived, until more time to work on it arises.
 
-![image](https://user-images.githubusercontent.com/6808033/190039103-62e275d3-36c2-4a6b-adf8-e7a8fe85b75d.png)
+![image](https://user-images.githubusercontent.com/6808033/190040117-05ae13cb-9dff-4ffb-baf2-3001cd16c279.png)
